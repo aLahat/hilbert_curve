@@ -58,6 +58,7 @@ from that code that appears in the paper by Skilling, ::
 .. _hypercube: https://en.wikipedia.org/wiki/Hypercube
 .. _mapping-n-dimensional-value-to-a-point-on-hilbert-curve: http://stackoverflow.com/questions/499166/mapping-n-dimensional-value-to-a-point-on-hilbert-curve/10384110#10384110
 """
+import numpy as np
 
 def _binary_repr(num, width):
     """Return a binary string representation of `num` zero padded to `width`
@@ -168,3 +169,46 @@ def distance_from_coordinates(x, p, N):
 
     h = _transpose_to_hilbert_integer(x, p, N)
     return h
+
+
+def hilbert(l):
+    """returns a 2D array of the inputed list.
+
+    :param l: list of numbers
+    :type l: ``list`` of ``numerical``
+    """
+    w = int((round(len(l)**0.5+0.5))*1.4)
+
+    to_matrix={}
+    for n,i in enumerate(l):
+        x,y = coordinates_from_distance(n,w,2)
+        to_matrix[x,y]=i
+    matrix = np.zeros([1+max([i[0] for i  in to_matrix.keys()]),
+                       1+max([i[1] for i  in to_matrix.keys()])])
+    for a,b in to_matrix.items():
+        matrix[a]=b
+    return matrix
+
+def HilberColor(*l):
+    """returns a 3D array of the inputed lists for plotting using plt.imshow.
+	if onlty one list is inputed the only one channel is returned,
+	if two lists are inputed then the second list takes up the second and third channel
+
+    :param l: lists of numbers
+    :type l: ``list`` of ``numerical``
+    """
+    if len(l)==1:
+        return hilbert(l[0])
+    elif len(l)==2:
+        a=l[0]
+        b=l[1]
+        c=b
+    elif len(l)==3:
+        a=l[0]
+        b=l[1]
+        c=l[2]
+    elif len(l)>3: return None
+    a,b,c = [hilbert(i) for i in [a,b,c]]
+    a,b,c = [i-np.nanmin(i) for i in [a,b,c]]
+    a,b,c = [i/np.nanmax(i) for i in [a,b,c]]
+    return np.dstack([a,b,c])
