@@ -198,7 +198,9 @@ def HilberColor(*l):
     :type l: ``list`` of ``numerical``
     """
     if len(l)==1:
-        return hilbert(l[0])
+        a=l[0]
+        b=a
+        c=a
     elif len(l)==2:
         a=l[0]
         b=l[1]
@@ -208,7 +210,14 @@ def HilberColor(*l):
         b=l[1]
         c=l[2]
     elif len(l)>3: return None
+    a,b,c = [list(l) for l in [a,b,c]]
+    M = (max([len(i) for i in [a,b,c]]))
+    a += [0]*(M-len(a))
+    b += [0]*(M-len(b))
+    c += [0]*(M-len(c))
     a,b,c = [hilbert(i) for i in [a,b,c]]
     a,b,c = [i-np.nanmin(i) for i in [a,b,c]]
-    a,b,c = [i/np.nanmax(i) for i in [a,b,c]]
+    a,b,c = [i/(np.nanmax(i)+0.0001) for i in [a,b,c]]
+    
     return np.dstack([a,b,c])
+
