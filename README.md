@@ -65,6 +65,9 @@ for axes,CHR in zip(axarr,CHROMS):
 plt.subplots_adjust(wspace=0.05, hspace=0.05)
 plt.show()
 ```
+
+![cropped example](/hilbert_cropped.png)
+
 As Hilbert curves naturally cluster nearby regions, we can visualize distinct early/late regions in the chromosome. 
 In this example we can observe that strong H3K27me3 (enhancer tag) and H3K4me (promoter tag) do not overlap (promoter and enhancer are distant to each other), but are mostly located in replicative early regions.
 
